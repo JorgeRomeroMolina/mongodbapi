@@ -11,6 +11,10 @@
   ],
   "author": "Jorge Romero Molina <jorgeromeromoli@gmail.com>",
   "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/JorgeRomeroMolina/mongodbapi.git"
+  },
   "dependencies": {
 	"mongodb": "2.1.16",
 	"command-line-args": "2.1.6"
