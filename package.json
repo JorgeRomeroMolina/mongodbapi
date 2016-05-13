@@ -17,6 +17,7 @@
   },
   "dependencies": {
 	"mongodb": "2.1.16",
-	"command-line-args": "2.1.6"
+	"command-line-args": "2.1.6",
+	"deasync": "*"
   }
 }

@@ -1,7 +1,7 @@
 
 
 //*****************************************************  REFERENCES  ******************************************
-//const mongo = require('../crud.js');
+//const mongo = require('./lib/crud.js');
 const mongoClient = require('mongodb').MongoClient;
 const commandLineArgs = require('command-line-args');
 const assert = require('assert');
@@ -11,6 +11,9 @@ var options = commandLineOptions();
 
 var cs = "mongodb://" + options.url + ":" + options.port + "/"; 
 
+
+
+
 mongoClient.connect(cs,function(err,db){
 	
 	assert.equal(err,null);
@@ -18,7 +21,23 @@ mongoClient.connect(cs,function(err,db){
 	console.log("connection state: OK");
 	db.close();
 	
+	connect1();
+	
 });
+
+function connect1 () {
+		
+	return new Promise((resolve, reject) => {
+console.log(cs);
+		mongoClient.connect(cs, (err, db) => {
+console.log("pasa");
+			if (err === null) { resolve(db); }
+			else { reject(err); }
+			
+		});
+	});
+	
+}
 
 function commandLineOptions(){
 	
