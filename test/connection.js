@@ -12,8 +12,6 @@ var options = commandLineOptions();
 var cs = "mongodb://" + options.url + ":" + options.port + "/"; 
 
 
-
-
 mongoClient.connect(cs,function(err,db){
 	
 	assert.equal(err,null);
@@ -28,9 +26,9 @@ mongoClient.connect(cs,function(err,db){
 function connect1 () {
 		
 	return new Promise((resolve, reject) => {
-console.log(cs);
+
 		mongoClient.connect(cs, (err, db) => {
-console.log("pasa");
+
 			if (err === null) { resolve(db); }
 			else { reject(err); }
 			
