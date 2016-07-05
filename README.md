@@ -53,4 +53,7 @@ mongo.read( { collection: collectionName } ).then( (result) => {
 ```
 
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> 77041c7ad6c9fc965bd7f6b5cf562555d159c55e
