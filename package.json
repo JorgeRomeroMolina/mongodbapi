@@ -1,6 +1,6 @@
 {
   "name": "mongodbapi",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "description": "Api for mongodb",
   "main": "index.js",
   "scripts": {
@@ -16,8 +16,8 @@
     "url": "https://github.com/JorgeRomeroMolina/mongodbapi.git"
   },
   "dependencies": {
-	"mongodb": "2.1.16",
-	"command-line-args": "2.1.6",
-	"deasync": "*"
+    "mongodb": "2.1.16",
+    "mocha": "3.0.0",
+    "chai": "3.5.0"
   }
 }

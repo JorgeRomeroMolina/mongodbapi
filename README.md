@@ -1,6 +1,7 @@
 mongodbapi
 =================
-mongodbapi is a [MongoDB](https://www.mongodb.org/) object modeling tool designed to work both asynchronous and synchronous environments.
+mongodbapi is a [MongoDB](https://www.mongodb.org/) object modeling tool designed to work in asynchronous environments.
+
 
 Prerequisites
 ------------
@@ -15,45 +16,20 @@ $ npm install mongodbapi
 
 Overview
 ------------
-You could create synchronous crud proccess to add, read, update and delete information from mongodb:    
-```js
-let mongoapi = require('mongocrud');
-const cs = "mongodb://127.0.0.1:27017/local";
-const collectionName = "test_crud";
-
-try {
-
-	let mongo = new mongoapi(cs);
-	let result = mongo.read( { collection: collection } );
-	console.log(result);
-
-} catch ( err ) { 
-
-	console.log(err);
-	  
-}
-```
-
-Or if you preffer asynchronous processes, you could create them by means of promises:  
+You can create crud methods by means of promises:    
 ```js
 let mongoapi = require('mongocrudAsync');
-const cs = "mongodb://127.0.0.1:27017/local";
-const collectionName = "test_crudAsync";
+const connection = 'mongodb://127.0.0.1:27017/local';
+const collectionName = 'test_crudAsync';
 
-let mongo = new mongoapi(cs);
+let mongo = new mongoapi(connection);
 mongo.read( { collection: collectionName } ).then( (result) => {
 
-	console.log(result);
+    console.log(result);
 
 }, (err) => {
 
-	console.log(err);
+    console.log(err);
 
 } );
 ```
-
-
-<<<<<<< HEAD
-
-=======
->>>>>>> 77041c7ad6c9fc965bd7f6b5cf562555d159c55e
