@@ -35,4 +35,4 @@ mongo.read(command).then( (result) => {
 } );
 ```
 
-[Please click here for complete document](http://termylab.ddns.net:1000)
+[Please click here for complete documentation](http://termylab.ddns.net:1000)
