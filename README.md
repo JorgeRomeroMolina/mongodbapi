@@ -1,6 +1,6 @@
 mongodbapi
 =================
-mongodbapi is a [MongoDB](https://www.mongodb.org/) object modeling tool designed to work in asynchronous environments.
+Mongodbapi is a [MongoDB](https://www.mongodb.org/) interface designed to create CRUD operations (create, read, update and delete [documents](https://docs.mongodb.com/manual/core/document/#bson-document-format)).
 
 
 Prerequisites
@@ -16,14 +16,15 @@ $ npm install mongodbapi
 
 Overview
 ------------
-You can create crud methods by means of promises:    
+Managing docs with mongodbapi is very easy, you just need to create a mongo object passing a connection string, and then executing a CRUD operator:    
 ```js
-let mongoapi = require('mongocrudAsync');
-const connection = 'mongodb://127.0.0.1:27017/local';
-const collectionName = 'test_crudAsync';
+let mongoapi = require('mongodbapi');
 
+const connection = 'mongodb://127.0.0.1:27017/local';
 let mongo = new mongoapi(connection);
-mongo.read( { collection: collectionName } ).then( (result) => {
+
+let command = { collection: 'test' };
+mongo.read(command).then( (result) => {
 
     console.log(result);
 
@@ -33,3 +34,5 @@ mongo.read( { collection: collectionName } ).then( (result) => {
 
 } );
 ```
+
+[Please click here for complete document](http://termylab.ddns.net:1000)
