@@ -7,7 +7,7 @@ const collection = "test_crudAsync";
 
 let assert = require('chai').assert;
 let mongoapi = require("../lib/crudAsync.js");
-let mongo = new mongoapi(cs); 
+//let mongo = new mongoapi(cs); 
 
 
 function obj(){
@@ -16,6 +16,7 @@ function obj(){
 		"text": "Text test 0",
 		"number": 0,
 		"date": new Date(),
+		"boolean": false,
 		"text_array": ["Text array one","Text array two","Text array three"],
 		"number_array": [1,2,3],
 		"object_array": [
@@ -160,6 +161,47 @@ describe('Testing method read', () => {
 
 });
 
+describe('Testing method aggregate', () => {
+
+	it('Checking mandatory fields error in collection parameter', () => {
+		return test_aggregate_MandatoryParameters_collection().then( (response) => {
+			assert.typeOf(response, 'error');
+			assert.property(response, 'code');
+			assert.equal(response.code, 'err_mongodbapi_002');
+			assert.property(response, 'status');
+			assert.equal(response.status, false);
+		});
+	});
+
+	it('Checking mandatory fields error in aggregation parameter', () => {
+		return test_aggregate_MandatoryParameters_aggregate().then( (response) => {
+			assert.typeOf(response, 'error');
+			assert.property(response, 'code');
+			assert.equal(response.code, 'err_mongodbapi_008');
+			assert.property(response, 'status');
+			assert.equal(response.status, false);
+		});
+	});
+
+	it('Checking array aggregation field', () => {
+		return test_aggregate_aggregate_noArray().then( (response) => {
+			assert.typeOf(response, 'error');
+			assert.property(response, 'code');
+			assert.equal(response.code, 'err_mongodbapi_009');
+			assert.property(response, 'status');
+			assert.equal(response.status, false);
+		});
+	});
+
+	it('Getting results', () => {
+		return test_aggregate_getResults().then( (response) => {
+			assert.typeOf(response, 'Array');
+			assert.equal(response.length, 49);
+		});
+	});
+
+});
+
 describe('Testing method delete', () => {
 
 	it('Checking connection error', () => {
@@ -189,6 +231,16 @@ describe('Testing method delete', () => {
 			assert.equal(response.status, true);
 			assert.property(response, 'deletedCount');
 			assert.equal(response.deletedCount, 1); 
+		} );
+	});
+
+	it("Deleting with filter which criterias doesn't match", () => {
+		return test_delete_deleteWithFilterNoMatch().then( (response) => {
+			assert.typeOf(response, 'object');
+			assert.property(response, 'status');
+			assert.equal(response.status, true);
+			assert.property(response, 'deletedCount');
+			assert.equal(response.deletedCount, 0);
 		} );
 	});
 
@@ -281,6 +333,7 @@ function test_insert_oneDocument () {
 function test_insert_manyDocument () {
 
 	let objs = [];
+	let flag = false;
 
 	for ( let i=1; i<100; i++ ) {
 
@@ -288,6 +341,7 @@ function test_insert_manyDocument () {
 		auxObj.code = i;
 		auxObj.text = "Text test " + i;
 		auxObj.number = i;
+		auxObj.boolean = (i % 2 == 0) ? true : false;
 
 		objs.push(auxObj);
 	} 
@@ -412,6 +466,7 @@ function test_read_getAll () {
 
 }
 
+
 function test_read_queryWithFilter () {
 
 	return new Promise( (resolve, reject) => {
@@ -490,6 +545,111 @@ function test_read_queryOrderDesc () {
 
 }
 
+function test_aggregate_getResults () {
+
+	return new Promise( (resolve, reject) => {
+
+		let params = {
+			collection: collection,
+			pipeline: [
+				{ $match: { boolean: true } },
+				{ $group: { _id: "$code", total: { $sum: "$number" } } }
+			]
+		};
+
+		let mongo = new mongoapi(cs);
+		mongo.aggregate(params).then( (result) => {
+
+			resolve(result);
+
+		}, (err) => {
+
+			reject(err);
+
+		});
+
+	});
+
+}
+
+function test_aggregate_MandatoryParameters_collection () {
+
+	return new Promise( (resolve, reject) => {
+
+		let command = {
+			collectionWrong: collection,
+			pipeline: [
+				{ $match: { boolean: true } },
+				{ $group: { _id: "$code", total: { $sum: "$number" } } }
+			]
+		};
+
+		let mongo = new mongoapi(cs);
+		mongo.aggregate(command).then( (result) => {
+
+			reject(result);
+
+		}, (err) => {
+
+			resolve(err);
+
+		});
+
+	});
+
+}
+
+
+function test_aggregate_MandatoryParameters_aggregate () {
+
+	return new Promise( (resolve, reject) => {
+
+		let command = {
+			collection: collection,
+			aggregateWrong: [
+				{ $match: { boolean: true } },
+				{ $group: { _id: "$code", total: { $sum: "$number" } } }
+			]
+		};
+
+		let mongo = new mongoapi(cs);
+		mongo.aggregate(command).then( (result) => {
+
+			reject(result);
+
+		}, (err) => {
+
+			resolve(err);
+
+		});
+
+	});
+
+}
+
+function test_aggregate_aggregate_noArray () {
+
+	return new Promise( (resolve, reject) => {
+
+		let command = {
+			collection: collection,
+			pipeline: "wrong"
+		};
+
+		let mongo = new mongoapi(cs);
+		mongo.aggregate(command).then( (result) => {
+
+			reject(result);
+
+		}, (err) => {
+
+			resolve(err);
+
+		});
+
+	});
+
+}
 
 function test_delete_mandatoryParameters_collection () {
 
@@ -517,6 +677,25 @@ function test_delete_deleteWithFilter () {
 
 		let mongo = new mongoapi(cs);
 		mongo.delete( { collection: collection, filter: { code: 1 } } ).then( (result) => {
+
+			resolve(result);
+
+		}, (err) => {
+
+			reject(err);
+
+		} );
+
+	} );
+
+}
+
+function test_delete_deleteWithFilterNoMatch () {
+
+	return new Promise( (resolve, reject) => {
+
+		let mongo = new mongoapi(cs);
+		mongo.delete( { collection: collection, filter: { codex: 999999999 } } ).then( (result) => {
 
 			resolve(result);
 
